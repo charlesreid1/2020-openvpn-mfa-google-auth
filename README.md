@@ -10,6 +10,7 @@ or URL that they can visit to set up MFA on their device.
 In the end, users will log on with their username and use an MFA token
 as their password.
 
+
 ## Table of Contents
 
 * [2020\-openvpn\-mfa\-google\-auth](#2020-openvpn-mfa-google-auth)
@@ -21,11 +22,13 @@ as their password.
     * [Step 6: Update Client Config File](#step-6-update-client-config-file)
     * [Step 7: Create MFA Registration Info for Users](#step-7-create-mfa-registration-info-for-users)
 
+
 ## Step 1: Install OpenVPN
 
 Skipping this step, will refer to [Digital Ocean's
 guide](https://www.digitalocean.com/community/tutorials/how-to-set-up-an-openvpn-server-on-ubuntu-18-04)
 to installing OpenVPN on Ubuntu 18.04.
+
 
 ## Step 2: Install Dependencies
 
@@ -38,6 +41,7 @@ Install two dependencies:
 ```
 apt install libqrencode3 libpam-google-authenticator
 ```
+
 
 ## Step 3: Create a Google Auth User/Group
 
@@ -53,6 +57,7 @@ mkdir /etc/openvpn/google-authenticator
 chown gauth:gauth /etc/openvpn/google-authenticator
 chmod 0700 /etc/openvpn/google-authenticator
 ```
+
 
 ## Step 4: Add PAM to OpenVPN Server Config File
 
@@ -70,6 +75,7 @@ system users and passwords as the VPN users and passwords, with no MFA.
 The last word in the line is an "action" that corresponds to a file with
 that name in `/etc/pam.d/`.
 
+
 ## Step 5: PAM Configuration
 
 In the prior step we told OpenVPN to use the PAM plugin, and to look for
@@ -84,6 +90,11 @@ auth required /lib/x86_64-linux-gnu/security/pam_google_authenticator.so secret=
 Note that this assumes Google Authenticator user secrets will be located in 
 `/etc/openvpn/google-authenticator/`. This can be changed but requires changes
 in the steps that follow too.
+
+Note that users are ONLY required to enter the MFA token, not a password. This may seem less secure.
+However, the user must also have the corresponding client key file, so it is basically the same as 2FA
+plus passwordless key access.
+
 
 ## Step 6: Update Client Config File
 
